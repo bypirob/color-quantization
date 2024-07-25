@@ -1,23 +1,7 @@
+mod pixel_hash;
 use std::{collections::HashMap, env};
 
 use image::{GenericImageView, ImageBuffer, Pixel, Rgb};
-
-fn get_pixel_hash(rgb: &[u8], depth: i8) -> String {
-    let mut pixel_hash = String::new();
-    for i in 0..depth {
-        let r_bit = (rgb[0] >> i) & 1;
-        let g_bit = (rgb[1] >> i) & 1;
-        let b_bit = (rgb[2] >> i) & 1;
-
-        // Combine these bits into a single value
-        let combined_bits = (r_bit << 2) | (g_bit << 1) | b_bit;
-
-        pixel_hash.push_str(&combined_bits.to_string());
-    }
-    // println!("PIXEL {}", pixel_hash);
-
-    return pixel_hash;
-}
 
 fn main() {
     let args: Vec<String> = env::args().collect();
@@ -40,7 +24,7 @@ fn main() {
     for (x, y, pixel) in img.pixels() {
         let pixel_rgb = pixel.to_rgb();
         let rgb = pixel_rgb.channels();
-        let pixel_hash = get_pixel_hash(rgb, depth);
+        let pixel_hash = pixel_hash::get_pixel_hash(rgb, depth);
 
         if tree.contains_key(&pixel_hash) {
             let v = tree.get(&pixel_hash).unwrap();
@@ -73,7 +57,7 @@ fn main() {
     for (x, y, pixel) in img.pixels() {
         let pixel_rgb = pixel.to_rgb();
         let rgb = pixel_rgb.channels();
-        let pixel_hash = get_pixel_hash(rgb, depth);
+        let pixel_hash = pixel_hash::get_pixel_hash(rgb, depth);
         let pixel_data = tree.get(&pixel_hash).unwrap();
         let pixel_quantized_color: [u8; 3] = [
             (pixel_data.1 / pixel_data.0) as u8,
