@@ -10,7 +10,6 @@ pub fn get_pixel_hash(rgb: &[u8], depth: i8) -> String {
 
         pixel_hash.push_str(&combined_bits.to_string());
     }
-    // println!("PIXEL {}", pixel_hash);
 
     return pixel_hash;
 }
